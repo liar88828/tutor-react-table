@@ -1,4 +1,6 @@
-import {useTable, useSortBy, useGlobalFilter, useFilters} from "react-table";
+import {useTable,
+	useGlobalFilter,
+	useFilters} from "react-table";
 import {
 	COLUMNS,
 //	GROUPED_COLUMNS
@@ -7,11 +9,18 @@ import MOCK_DATA from "./MOCK_DATA.json"
 import {useMemo} from "react";
 import './table.css'
 import {GlobalFiltering} from "./GlobalFiltering.jsx";
+import {ColumnFiltering} from "./ColumnFiltering.jsx";
 
 export const BasicTable = () => {
 	// const columns = useMemo(() => GROUPED_COLUMNS, []);
 	const columns = useMemo(() => COLUMNS, []);
 	const data = useMemo(() => MOCK_DATA, []);
+	const defaultColumn = useMemo(() => {
+		return {
+			Filter: ColumnFiltering
+		}
+	}, []);
+
 	const {
 		getTableProps,
 		getTableBodyProps,
@@ -22,7 +31,10 @@ export const BasicTable = () => {
 		state,
 		setGlobalFilter
 	} = useTable(
-			{columns: columns, data},
+			{
+				columns: columns, data,
+				defaultColumn
+			},
 			// useSortBy,
 			useGlobalFilter,
 			useFilters
@@ -74,7 +86,7 @@ export const BasicTable = () => {
 					<tfoot>
 					{
 						footerGroups.map(footerGroup => (
-								<tr> {...footerGroup.headers.map(column => (
+								<tr> {footerGroup.headers.map(column => (
 										<td {...column.getFooterProps}>
 											{column.render('Footer')}
 										</td>
