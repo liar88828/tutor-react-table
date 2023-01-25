@@ -1,6 +1,8 @@
-import {useTable,
+import {
+	useTable,
 	useGlobalFilter,
-	useFilters} from "react-table";
+	useFilters, usePagination
+} from "react-table";
 import {
 	COLUMNS,
 //	GROUPED_COLUMNS
@@ -26,10 +28,17 @@ export const BasicTable = () => {
 		getTableBodyProps,
 		headerGroups,
 		footerGroups,
-		rows,
+		nextPage,
+		previousPage,
 		prepareRow,
+		canPreviousPage,
+		canNextPage,
+		// rows,
+		page,
 		state,
-		setGlobalFilter
+		state: pageState,
+		setGlobalFilter,
+		pageOptions
 	} = useTable(
 			{
 				columns: columns, data,
@@ -37,10 +46,12 @@ export const BasicTable = () => {
 			},
 			// useSortBy,
 			useGlobalFilter,
-			useFilters
+			useFilters,
+			usePagination
 	)
 
 	const {globalFilter} = state
+	const {pageIndex} = pageState
 
 	return (
 			<>
@@ -53,8 +64,7 @@ export const BasicTable = () => {
 									{headerGroup.headers.map(column => (
 											<th{...column.getHeaderProps(
 													// column.getSortByToggleProps()
-											)}
-											>
+											)}                            >
 												<div> {column.canFilter ? column.render('Filter') : null}</div>
 												{column.render('Header')}
 												<span>
@@ -67,14 +77,12 @@ export const BasicTable = () => {
 					})}
 					</thead>
 					<tbody {...getTableBodyProps()}>
-					{rows.map(row => {
+					{page.map(row => {
 						prepareRow(row)
 						return (
-								<tr {...row.getRowProps()}
-								    key={row.id}>
+								<tr {...row.getRowProps()} key={row.id}>
 									{row.cells.map(cell => {
-										return <td {...cell.getCellProps()}
-												// key={ cell.row.original.id  }
+										return <td {...cell.getCellProps()} // key={ cell.row.original.id  }
 										>
 											{cell.render('Cell')}
 										</td>
@@ -95,6 +103,18 @@ export const BasicTable = () => {
 						))}
 					</tfoot>
 				</table>
+				<div>
+
+					<span>
+						page {' '}
+						<strong>
+							{pageIndex + 1} of {pageOptions.length}
+						</strong>
+
+					</span>
+					<button onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>
+					<button onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
+				</div>
 			</>
 	);
 }
