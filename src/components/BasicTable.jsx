@@ -1,4 +1,4 @@
-import {useTable, useSortBy, useGlobalFilter} from "react-table";
+import {useTable, useSortBy, useGlobalFilter, useFilters} from "react-table";
 import {
 	COLUMNS,
 //	GROUPED_COLUMNS
@@ -24,7 +24,8 @@ export const BasicTable = () => {
 	} = useTable(
 			{columns: columns, data},
 			// useSortBy,
-			useGlobalFilter
+			useGlobalFilter,
+			useFilters
 	)
 
 	const {globalFilter} = state
@@ -41,8 +42,8 @@ export const BasicTable = () => {
 											<th{...column.getHeaderProps(
 													// column.getSortByToggleProps()
 											)}
-											   key={column.render('id')}>
-
+											>
+												<div> {column.canFilter ? column.render('Filter') : null}</div>
 												{column.render('Header')}
 												<span>
 												{/*{column.isSorted ? (column.isSortedDesc ? '-' : '+') : ''}*/}
