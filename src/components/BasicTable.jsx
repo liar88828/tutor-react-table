@@ -33,16 +33,18 @@ export const BasicTable = () => {
 		prepareRow,
 		canPreviousPage,
 		canNextPage,
+		gotoPage,
+		pageCount,
 		// rows,
 		page,
 		state,
 		state: pageState,
 		setGlobalFilter,
-		pageOptions
+		pageOptions,
 	} = useTable(
 			{
 				columns: columns, data,
-				defaultColumn
+				defaultColumn, initialState: {pageIndex: 2}
 			},
 			// useSortBy,
 			useGlobalFilter,
@@ -104,7 +106,6 @@ export const BasicTable = () => {
 					</tfoot>
 				</table>
 				<div>
-
 					<span>
 						page {' '}
 						<strong>
@@ -112,8 +113,31 @@ export const BasicTable = () => {
 						</strong>
 
 					</span>
-					<button onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>
-					<button onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
+					<span>
+						Goto to Page : {' '}
+						<input type="number"
+						       value={pageIndex+1}
+						       defaultValue={pageIndex + 1}
+						       onChange={e => {
+							       // const pageNumber =     e.target.value ? Number(e.target.value) - 1 : 0
+							       // gotoPage( pageNumber)
+							       gotoPage(e.target.value ? Number(e.target.value) - 1 : 0)
+						       }}
+						/>
+					</span>
+					<button onClick={() => gotoPage(0)}
+					        disabled={!canPreviousPage}>{'<<'}
+					</button>
+					<button onClick={() => previousPage()}
+					        disabled={!canPreviousPage}>Previous
+					</button>
+
+					<button onClick={() => nextPage()}
+					        disabled={!canNextPage}>Next
+					</button>
+					<button onClick={() => gotoPage(pageCount - 1)}
+					        disabled={!canNextPage}>{'>>'}
+					</button>
 				</div>
 			</>
 	);
