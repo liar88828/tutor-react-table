@@ -1,7 +1,9 @@
 import {
 	useTable,
 	useGlobalFilter,
-	useFilters, usePagination
+	useFilters,
+	usePagination,
+	useRowSelect
 } from "react-table";
 import {
 	COLUMNS,
@@ -12,6 +14,7 @@ import {useMemo} from "react";
 import './table.css'
 import {GlobalFiltering} from "./GlobalFiltering.jsx";
 import {ColumnFiltering} from "./ColumnFiltering.jsx";
+import {CheckBox} from "./CheckBox";
 
 export const BasicTable = () => {
 	// const columns = useMemo(() => GROUPED_COLUMNS, []);
@@ -35,12 +38,12 @@ export const BasicTable = () => {
 		canNextPage,
 		gotoPage,
 		pageCount,
-		// rows,
-		page,
+		rows,
+		// page,
 		state,
 		setPageSize,
 		setGlobalFilter,
-		pageOptions,
+		pageOptions, selectedFlatRows
 	} = useTable(
 			{
 				columns: columns, data,
@@ -49,10 +52,28 @@ export const BasicTable = () => {
 			// useSortBy,
 			useGlobalFilter,
 			useFilters,
-			usePagination
+			usePagination,
+			useRowSelect,
+			(hooks) => {
+				hooks.visibleColumns.push((columns) => {
+					return [
+						{
+							id: 'selection',
+							Header: (
+									{getToggleAllRowsSelectedProps}) => (
+									<CheckBox
+											{...getToggleAllRowsSelectedProps()}/>
+							),
+							Cell: ({row}) => <CheckBox  {...row.getToggleRowSelectedProps()} />
+
+						}, ...columns
+					]
+				})
+			}
 	)
 
 	const {globalFilter, pageIndex, pageSize} = state
+	const firstPageRows = rows.slice(0, 10)
 
 	return (
 			<>
@@ -78,7 +99,8 @@ export const BasicTable = () => {
 					})}
 					</thead>
 					<tbody {...getTableBodyProps()}>
-					{page.map(row => {
+					{/*{page.map(row => {*/}
+					{firstPageRows.map(row => {
 						prepareRow(row)
 						return (
 								<tr {...row.getRowProps()} key={row.id}>
@@ -104,6 +126,21 @@ export const BasicTable = () => {
 						))}
 					</tfoot>
 				</table>
+				<pre>
+						<code>
+							{selectedFlatRows.map(row => {
+								return console.log(row.original)
+							})
+							}
+							{JSON.stringify(
+									{
+										selectedFlatRows: selectedFlatRows
+												.map(row => row.original)
+									},
+									null, 2
+							)}
+						</code>
+					</pre>
 				<div>
 					<span>
 						page {' '}
