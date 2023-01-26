@@ -38,7 +38,7 @@ export const BasicTable = () => {
 		// rows,
 		page,
 		state,
-		state: pageState,
+		setPageSize,
 		setGlobalFilter,
 		pageOptions,
 	} = useTable(
@@ -52,8 +52,7 @@ export const BasicTable = () => {
 			usePagination
 	)
 
-	const {globalFilter} = state
-	const {pageIndex} = pageState
+	const {globalFilter, pageIndex, pageSize} = state
 
 	return (
 			<>
@@ -116,7 +115,7 @@ export const BasicTable = () => {
 					<span>
 						Goto to Page : {' '}
 						<input type="number"
-						       value={pageIndex+1}
+						       value={pageIndex + 1}
 						       defaultValue={pageIndex + 1}
 						       onChange={e => {
 							       // const pageNumber =     e.target.value ? Number(e.target.value) - 1 : 0
@@ -125,6 +124,14 @@ export const BasicTable = () => {
 						       }}
 						/>
 					</span>
+					<select value={pageSize}
+					        onChange={e => setPageSize(Number(e.target.value))}>
+						{[10, 25, 50].map((item) => (
+								<option key={item} value={item}>
+									Show {item}
+								</option>
+						))}
+					</select>
 					<button onClick={() => gotoPage(0)}
 					        disabled={!canPreviousPage}>{'<<'}
 					</button>
