@@ -44,8 +44,11 @@ export const BasicTable = () => {
 		state,
 		setPageSize,
 		setGlobalFilter,
-		pageOptions, selectedFlatRows,
+		pageOptions,
+		selectedFlatRows,
 		setColumnOrder,
+		allColumns,
+		getToggleHideAllColumnsProps
 	} = useTable(
 			{
 				columns: columns, data,
@@ -68,7 +71,6 @@ export const BasicTable = () => {
 											{...getToggleAllRowsSelectedProps()}/>
 							),
 							Cell: ({row}) => <CheckBox  {...row.getToggleRowSelectedProps()} />
-
 						}, ...columns
 					]
 				})
@@ -91,6 +93,20 @@ export const BasicTable = () => {
 
 	return (
 			<>
+				<div>
+					<div>
+						<CheckBox {...getToggleHideAllColumnsProps()}/> Toggle All
+					</div>
+					{allColumns.map(column => (
+							<div key={column.id}>
+								<label>
+									<input type="checkbox"
+									       {...column.getToggleHiddenProps()}/>
+									{column.Header}
+								</label>
+							</div>
+					))}
+				</div>
 				< button onClick={changeOrder}>Change Column Order</button>
 				<GlobalFiltering filter={globalFilter} setFilter={setGlobalFilter}/>
 				<table {...getTableProps()}>
