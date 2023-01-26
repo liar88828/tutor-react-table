@@ -3,7 +3,8 @@ import {
 	useGlobalFilter,
 	useFilters,
 	usePagination,
-	useRowSelect
+	useRowSelect,
+	useColumnOrder,
 } from "react-table";
 import {
 	COLUMNS,
@@ -43,7 +44,8 @@ export const BasicTable = () => {
 		state,
 		setPageSize,
 		setGlobalFilter,
-		pageOptions, selectedFlatRows
+		pageOptions, selectedFlatRows,
+		setColumnOrder,
 	} = useTable(
 			{
 				columns: columns, data,
@@ -54,6 +56,7 @@ export const BasicTable = () => {
 			useFilters,
 			usePagination,
 			useRowSelect,
+			useColumnOrder,
 			(hooks) => {
 				hooks.visibleColumns.push((columns) => {
 					return [
@@ -75,8 +78,20 @@ export const BasicTable = () => {
 	const {globalFilter, pageIndex, pageSize} = state
 	const firstPageRows = rows.slice(0, 10)
 
+
+	const changeOrder = () => {
+		setColumnOrder(["id",
+			"first_name",
+			"last_name",
+			"phone",
+			"date_of_birth",
+			"country",
+		])
+	}
+
 	return (
 			<>
+				< button onClick={changeOrder}>Change Column Order</button>
 				<GlobalFiltering filter={globalFilter} setFilter={setGlobalFilter}/>
 				<table {...getTableProps()}>
 					<thead>
