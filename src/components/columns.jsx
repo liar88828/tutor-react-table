@@ -4,15 +4,16 @@ import {format} from "date-fns";
 export const COLUMNS = [
 	{
 		Header: 'Id', Footer: 'Id', accessor: "id",
-		disableFilters:true
+		disableFilters:true                   ,
+		sticky:"left"
 		// Filter: filter
 	},
 	{
-		Header: 'First Name', Footer: 'First Name', accessor: "first_name",
+		Header: 'First Name', Footer: 'First Name', accessor: "first_name",      		sticky:"left"
 		// Filter: filter
 	},
 	{
-		Header: 'Last Name', Footer: 'Last Name', accessor: "last_name",
+		Header: 'Last Name', Footer: 'Last Name', accessor: "last_name",    		sticky:"left"
 		// Filter: filter
 	},
 	{
